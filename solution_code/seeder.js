@@ -6,6 +6,9 @@ const Species = require('./models/species');
 
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
+
+const SALT_LENGTH = 12;
 
 
 // Function to check for seeding
@@ -54,13 +57,16 @@ async function runSeeder(){
     // Load the roles json
     for (let i = 0; i < jsonRoleData.length; i++) {
         // Create role
+        const newRole = {
+            name: jsonRoleData[i]['name'],
+            machineName: jsonRoleData[i]['machineName']
+        }
+
+        const user = await Role.create(newRole)
 
     }
     console.log("Seeding Roles Complete")
 
-
-    // Get all roles
-    const roles = await Role.find({})
 
 
     // Clear users
@@ -74,10 +80,31 @@ async function runSeeder(){
 
         // Loop through each
         for (let i = 0; i < jsonUserData.length; i++) {
-             // Look up the intended role ID
+
+            // Look up the intended role ID
+            const newRoles = [];
+
+            for(let r=0; r < jsonUserData[i]['roles'].length; r++){
+                const role = await Role.findOne({
+                    machineName: jsonUserData[i]['roles'][r]
+                })
+
+                if(role){
+                    newRoles.push(role._id)
+                }
+            }
+
+            const newUser = {
+                username: jsonUserData[i]['username'],
+                firstName: jsonUserData[i]['firstName'],
+                lastName: jsonUserData[i]['lastName'],
+                roles: newRoles,
+                hashedPassword: bcrypt.hashSync(jsonUserData[i]['defaultPassword'], SALT_LENGTH)
+            }
 
             // Create user
-    
+            const user = await User.create(newUser)
+
         }
     console.log("Seeding Users Complete")
 
