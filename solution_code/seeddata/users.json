@@ -1,0 +1,44 @@
+[
+    {
+        "username":"jcaesar",
+        "firstName":"Gaius",
+        "lastName":"Julius Caesar",
+        "defaultPassword":"rubicon",
+        "roles":["superadmin"]
+    },
+    {
+        "username":"lsulla",
+        "firstName":"Lucius",
+        "lastName":"Cornelius Sulla",
+        "defaultPassword":"jugurtha",
+        "roles":["leadkeeper"]
+    },
+    {
+        "username":"lbourbon",
+        "firstName":"Louis",
+        "lastName":"Bourbon",
+        "defaultPassword":"eatCake",
+        "roles":["leadkeeper","keeper"]
+    },
+    {
+        "username":"cbourbon",
+        "firstName":"Charles",
+        "lastName":"Bourbon",
+        "defaultPassword":"doNotEatCake",
+        "roles":["keeper"]
+    },
+    {
+        "username":"gkhan",
+        "firstName":"Temujin",
+        "lastName":"Borjigin",
+        "defaultPassword":"horde",
+        "roles":["intern"]
+    },
+    {
+        "username":"kkhan",
+        "firstName":"Kublai",
+        "lastName":"Borjigin",
+        "defaultPassword":"yuan",
+        "roles":["intern"]
+    }
+]
