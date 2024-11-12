@@ -10,5 +10,17 @@
     {
         "name":"Llama",
         "description":""
+    },
+    {
+        "name":"Zebra",
+        "description":""
+    },
+    {
+        "name":"Gazelle",
+        "description":""
+    },
+    {
+        "name":"Okapi",
+        "description":""
     }
 ]

@@ -7,6 +7,7 @@ const Species = require('./models/species');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const { faker } = require('@faker-js/faker');
 
 const SALT_LENGTH = 12;
 
@@ -35,14 +36,15 @@ async function runSeeder(){
 
     const isDBSeeded = await isSeeded();
 
-    if(isDBSeeded){
+    if(isDBSeeded && process.argv.indexOf('-reseed') == -1){
         // DB is already seeded, do not reseed
         console.log("Database already seeded")
         return false;
     }else{
         console.log("Starting database seed")
-
     }
+
+    const startTime = Date.now();
 
     // Create Roles from roles.json
     console.log("Seeding Roles")
@@ -65,8 +67,7 @@ async function runSeeder(){
         const user = await Role.create(newRole)
 
     }
-    console.log("Seeding Roles Complete")
-
+    console.log("Seeding Roles Complete: ", Date.now() - startTime)
 
 
     // Clear users
@@ -106,7 +107,7 @@ async function runSeeder(){
             const user = await User.create(newUser)
 
         }
-    console.log("Seeding Users Complete")
+    console.log("Seeding Users Complete: ", Date.now() - startTime)
 
 
     console.log("Seeding Species")
@@ -120,32 +121,47 @@ async function runSeeder(){
         // Loop through each
         for (let i = 0; i < jsonSpeciesData.length; i++) {
             // Create Species
-    
+            const newSpecies = {
+                name: jsonSpeciesData[i]['name'],
+                description: jsonSpeciesData[i]['description']
+            }
+
+            // Save Species
+            const user = await Species.create(newSpecies)
         }
 
     // Get all species
     const species = await Species.find({});
 
 
-    console.log("Seeding Species Complete")
+    console.log("Seeding Species Complete: ", Date.now() - startTime)
 
 
     console.log("Seeding Fields")
 
     // Clear fields
-    Field.deleteMany({})
+    const fdelResult = await Field.deleteMany({});
 
-    // Number of fields to create
-    const fieldCount = 5
+    // Create the Fields from fields.json
+    const jsonFieldsFile = fs.readFileSync(path.join(dirPath, "fields.json"), 'utf8');
+    const jsonFieldsData = JSON.parse(jsonFieldsFile);
 
-    // Use faker to create a list of fields
-    for(let i=0; i<fieldCount;i++){
+        // Loop through each
+        for (let i = 0; i < jsonFieldsData.length; i++) {
+            // Create Species
+            const newField = {
+                name: jsonFieldsData[i]['name'],
+                description: jsonFieldsData[i]['description']
+            }
 
-    }
-    console.log("Seeding Complete")
+            // Save Species
+            const user = await Field.create(newField)
+        }
+
+    console.log("Seeding Fields Complete: ", Date.now() - startTime)
 
     // Get the created fields
-    const fields = Field.find({});
+    const fields = await Field.find({});
 
     console.log("Seeding Animals")
 
@@ -154,19 +170,101 @@ async function runSeeder(){
 
     // Choose number of animals
     const animalCount = 172;
+    
+
+    // Generate the unique names for all the animals
+    const animalNames = [];
+    let nameLoopCount = 0;
+
+    while(animalNames.length < animalCount){
+        const newName = faker.person.firstName();
+        if(animalNames.indexOf(newName) == -1){
+            animalNames.push(newName);
+        }
+        nameLoopCount++;
+        if(nameLoopCount > animalNames * 10){
+            break;
+        }
+    }
+
+    // Get keeper role ID's
+    const keeperRoleIDData = await Role.find( {
+          "$or": [
+            {
+              machineName: "keeper"
+            },
+            {
+                machineName: "leadkeeper"
+            }
+          ]
+      });
+    
+    const keeperRoleIDs = [];
+    for(let k=0; k<keeperRoleIDData.length; k++){
+        keeperRoleIDs.push(keeperRoleIDData[k]['_id'])
+    }
+
+    // Get all users with role keeper or lead keeper
+    const keepers = await User.aggregate([{
+            $match:{
+            "roles":{
+                $in:keeperRoleIDs
+            }
+        }
+    }]);
+
 
     // Use faker to create animals
-    for(let i=0; i<animalCount; i++){
+    for(let i=0; i<animalNames.length; i++){
         // Choose a species
+        const speciesIndex = Math.floor(Math.random() * species.length)
+        const speciesID = species[speciesIndex]['_id'];
 
         // Choose a field
+        const fieldsIndex = Math.floor(Math.random() * fields.length)
+        const fieldsID = fields[fieldsIndex]['_id'];
+
+        // Create the Feeding Log
+
+            // Create the log array
+            const feedingLog = [];
+
+            // Determine Feeding Log Length
+            const feedingLogEntryCount = Math.ceil(Math.random() * 80)
+
+            // For each entry in the log
+            for(let f=0; f<feedingLogEntryCount;f++){
+                // Choose a keeper
+                const keeperIndex = Math.floor(Math.random() * keepers.length);
+
+                // Generate some notes
+                const notes = faker.lorem.lines({ min: 1, max: 3 })
+
+                // Add log entry to array
+                feedingLog.push({
+                    keeper: keepers[keeperIndex],
+                    notes: notes
+                });
+
+            }
+
 
         // Create the animal
-    }
-    console.log("Seeding Animals Complete")
+        const newAnimal = {
+            name: animalNames[i],
+            species: speciesID,
+            field: fieldsID,
+            feedingLog: feedingLog
+        }
+        
+        const animal = await Animal.create(newAnimal)
 
-    console.log("Seeding Complete")
+    }
+    console.log("Seeding Animals Complete: ", Date.now() - startTime)
+
+    console.log("Seeding Complete With Duration: ", Date.now() - startTime)
     return true;
     }
+       
 
     module.exports = runSeeder;
