@@ -11,6 +11,15 @@ Unfortunately due to the team being understaffed, this project was left to the i
 * This system will be used by both a React front end (not yet built), and another back-end server. As a result of the latter, ONLY the GET and POST methods will be supported.
 * There is sample data being loaded into the system including test users. These can be found in the ```seeddata/``` folder.
 
+### Role Based Access Control
+
+The concept behind Role-based Access Control (RBAC) is that each job function in the organization has a 'role' and each user is assigned the roles based on their work. Each API function will require one of several roles before it allows the user to proceed. For example - a delete action may be limited to managers or administrators.
+
+In this scenario, we have several pre-defined roles that have both human-readable and machine names (these are all defined in ```seeddata/roles/json```). We want each protected function in our code to have a list of roles described by their machine names. It will then look at the user's roles and see if there are any matches?
+
+#### Why 'machinenames'?
+
+Often we want something to have both a human-friendly name. This may include spaces, punctuation, and should be changable without breaking anything. Additionally, we don't know in advance what _id the database server will assign to our roles in the database. In this scenario we want to assign our own *immutable* identifier that is easy to code with. This is the purpose of the machine name. We can _id's change between database servers, changes in the human-friendly name but still have our code work.
 
 ### Required User Storeies from the Product Management Team
 
@@ -24,6 +33,9 @@ Unfortunately due to the team being understaffed, this project was left to the i
 * As a lead keeper, I should be able to rename an animal
 * As a lead keeper, I should be able to add or remove animals
 * As a lead keeper, I should be able to add or edit species
+* As a lead keeper, I should be able to edit a field
+* As a super admin, I should be able to add or remove fields
+* As a super admin, I should be able to remove species
 
 ### Stories NOT included in the demo
 

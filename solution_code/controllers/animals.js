@@ -1,9 +1,16 @@
 const Animal = require('../models/animal.js');
 const Field = require('../models/field.js');
-
+const {checkRoleByName} = require('../modules/authorization.js')
 
 // Rename Animal Controller - only allow animal to rename
 exports.renameAnimal = async function(req,res,next){
+    
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,['leadkeeper']);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
 
     let animal;
     try {
@@ -68,6 +75,13 @@ exports.getAllAnimals = async function(req,res,next){
 
 // Feed an animal
 exports.feedAnimal = async function (req,res,next){
+    
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,['keeper','leadkeeper']);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
 
     let animal;
     try {
@@ -117,6 +131,12 @@ exports.feedAnimal = async function (req,res,next){
 // }
 exports.moveAnimal = async function (req,res,next){
 
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,['leadkeeper']);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
 
     // Get the target field
     let field;
@@ -171,7 +191,14 @@ exports.moveAnimal = async function (req,res,next){
     }
 */
 exports.addAnimal = async function (req,res,next){
-    
+
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,['leadkeeper']);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
+
     // Attempt to create the animal
     try {
         const animal = await Animal.create(req.body);
@@ -191,6 +218,14 @@ exports.addAnimal = async function (req,res,next){
 // Remove an animal
 
 exports.removeAnimal = async function (req,res,next){
+
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,['leadkeeper']);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
+
     // Attempt to remove the animal
     try {
 

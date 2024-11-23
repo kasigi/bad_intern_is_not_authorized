@@ -35,6 +35,14 @@ exports.getAllSpecies = async function(req,res,next){
 
 // Remove a species
 exports.removeSpecies = async function (req,res,next){
+
+      // Check for Authorization
+      const allowed = await checkRoleByName(req.user._id,[]);
+
+      if(!allowed){
+          return res.status(401).json({ error: 'Not Authorized' });
+      }
+
     // Attempt to remove the species
     try {
 
@@ -52,6 +60,14 @@ exports.removeSpecies = async function (req,res,next){
 
 // Edit a species
 exports.editSpecies = async function (req,res,next){
+
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,['leadkeeper']);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
+
     // Attempt to remove the species
     try {
 
@@ -76,6 +92,13 @@ exports.editSpecies = async function (req,res,next){
 */
 exports.addSpecies = async function (req,res,next){
     
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,['leadkeeper']);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
+
     // Attempt to create the species
     try {
         const species = await Species.create(req.body);

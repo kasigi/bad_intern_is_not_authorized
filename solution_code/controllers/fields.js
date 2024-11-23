@@ -35,6 +35,14 @@ exports.getAllFields = async function(req,res,next){
 
 // Remove a field
 exports.removeField = async function (req,res,next){
+
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,[]);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
+
     // Attempt to remove the field
     try {
 
@@ -52,6 +60,14 @@ exports.removeField = async function (req,res,next){
 
 // Edit a field
 exports.editField = async function (req,res,next){
+
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,['leadkeeper']);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
+
     // Attempt to remove the field
     try {
 
@@ -75,7 +91,14 @@ exports.editField = async function (req,res,next){
     }
 */
 exports.addField = async function (req,res,next){
-    
+
+    // Check for Authorization
+    const allowed = await checkRoleByName(req.user._id,[]);
+
+    if(!allowed){
+        return res.status(401).json({ error: 'Not Authorized' });
+    }
+
     // Attempt to create the field
     try {
         const field = await Field.create(req.body);
