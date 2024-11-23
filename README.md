@@ -47,7 +47,14 @@ These stories are NOT part of this project and can be safely ignored.
 
 ### Methodology
 
-You will need to set the system locally use Postman or equivalent tools to make requests against the API. It will likely be necessary to read the code in the controllers to determine what sorts of requests are needed to take each action.
+You will need to set the system locally use Postman or equivalent tools to make requests against the API. There is a postman collection json file that you can use to start your testing.
+
+1. Open Postman
+2. Import the postman collection
+3. Go to the variables and make sure the ```base_url``` is correct for your system
+4. After loggin in, you can update the ```token``` variable with your authorization token
+
+Note: This postman collection is just a STARTER. You may need to add more requests.
 
 ## Learning Goals
 
