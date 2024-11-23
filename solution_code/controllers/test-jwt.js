@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
-router.get('/sign-token', (req, res) => {
+exports.signToken = function (req, res, next){
     // Mock user object added
     const user = {
         _id: 1,
@@ -12,9 +12,9 @@ router.get('/sign-token', (req, res) => {
     // Create a token using the sign method
     const token = jwt.sign({ user }, process.env.JWT_SECRET);
     res.json({ token });
-});
+};
 
-router.post('/verify-token', (req, res) => {
+exports.verifyToken = function (req, res, next) {
     const token = req.headers.authorization.split(' ')[1];
         // Add in verify method
         try {
@@ -23,6 +23,5 @@ router.post('/verify-token', (req, res) => {
         } catch (error) {
             res.status(401).json({ error: 'Invalid token.' });
         }
-});
+};
 
-module.exports = router;

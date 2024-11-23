@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
@@ -7,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const SALT_LENGTH = 12;
 
-router.post('/signup', async (req, res) => {
+exports.signup = async function (req,res,next) {
     try {
         // Check if the username is already taken
         const userInDatabase = await User.findOne({ username: req.body.username });
@@ -26,9 +25,14 @@ router.post('/signup', async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-});
-
-router.post('/signin', async (req, res) => {
+};
+/*
+    {
+        "username":"someUser",
+        "password":"somePassword"
+    }
+*/
+exports.signin = async function (req,res,next) {
     try {
         // Get the requested user from the database
         const user =
@@ -50,6 +54,5 @@ router.post('/signin', async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-});
+};
 
-module.exports = router;
