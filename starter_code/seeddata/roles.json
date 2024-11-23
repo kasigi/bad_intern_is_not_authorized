@@ -1,0 +1,18 @@
+[
+    {
+        "name":"Super Admin",
+        "machineName":"superadmin"
+    },
+    {
+        "name":"Lead Keeper",
+        "machineName":"leadkeeper"
+    },
+    {
+        "name":"Keeper",
+        "machineName":"keeper"
+    },
+    {
+        "name":"Intern",
+        "machineName":"intern"
+    }
+]

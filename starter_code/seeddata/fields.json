@@ -1,0 +1,18 @@
+[
+    {
+        "name":"Safari Adventure",
+        "description":"A reproduction of the African savannah suitable for zebra, wildebeast, and gazelles"
+    },
+    {
+        "name":"Petting Zoo",
+        "description":"Easy access for visitors to interact with the animals"
+    },
+    {
+        "name":"Andean Scrubland",
+        "description":"Replica of the Andean mountain environment"
+    },
+    {
+        "name":"Great Field",
+        "description":"A large grassy field ideal for bovids, cervids, and other large herbivour"
+    }
+]
