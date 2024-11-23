@@ -7,7 +7,11 @@ const mongoose = require('mongoose');
 const testJWTRouter = require('./routes/test-jwt');
 const usersRouter = require('./routes/users');
 const animalsRouter = require('./routes/animals');
+const speciesRouter = require('./routes/species');
+const fieldsRouter = require('./routes/fields');
+
 const runSeeder = require('./seeder')
+
 
 mongoose.connect(process.env.MONGODB_URI,{
     dbName: process.env.MONGODB_NAME,
@@ -33,6 +37,8 @@ runSeeder();
 app.use('/test-jwt', testJWTRouter);
 app.use('/user', usersRouter);
 app.use('/animal', animalsRouter);
+app.use('/species', speciesRouter);
+app.use('/field', fieldsRouter);
 
 
 app.set("port", process.env.PORT || 3000);

@@ -54,7 +54,7 @@ exports.getAllAnimals = async function(req,res,next){
 
     try {
         // Retrieve all animals and fill in species and field
-        const animal = await Animal.find(req.params.animalId).populate('species').populate('field');
+        const animal = await Animal.find().populate('species').populate('field');
 
         // Return the result
         res.status(200).json(animal);
@@ -189,16 +189,12 @@ exports.addAnimal = async function (req,res,next){
 
 
 // Remove an animal
-/*
-    {
-        "id":"someAnimalID"
-    }
-*/
+
 exports.removeAnimal = async function (req,res,next){
     // Attempt to remove the animal
     try {
 
-        await Animal.findByIdAndDelete(req.body.id);
+        await Animal.findByIdAndDelete(req.params.animalId);
 
         // Return true on success
         return res.status(201).json(true);
