@@ -1,4 +1,4 @@
-# bad_intern_is_not_authorized
+# The Bad Intern is Not Authorized
 
 ## Scenario
 
